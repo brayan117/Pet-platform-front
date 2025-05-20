@@ -4,7 +4,6 @@ import { getAllCatBreeds } from "../services/catsApi";
 import { getAllDogBreeds } from "../services/dogsApi";
 import BreedCard from "../components/BreedCard/BreedCard";
 
-
 const FavoritesPage = () => {
   const { favorites } = useContext(FavoritesContext);
   const [allBreeds, setAllBreeds] = useState({ gatos: [], perros: [] });
@@ -24,10 +23,9 @@ const FavoritesPage = () => {
     fetchBreeds();
   }, []);
 
-
   const getBreedData = (id, tipo) => {
     const source = tipo === "gato" ? allBreeds.gatos : allBreeds.perros;
-    return source.find((b) => b.id === id);
+    return source?.find((b) => b.id === id);
   };
 
   return (
@@ -48,7 +46,7 @@ const FavoritesPage = () => {
               description={
                 breed.description || breed.temperament || "Sin descripción"
               }
-              image={breed.image?.url}
+              image={breed.image_url}
               petType={tipoMascota === "gato" ? "gatos" : "perros"}
             />
           );

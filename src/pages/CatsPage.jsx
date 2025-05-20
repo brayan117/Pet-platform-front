@@ -110,17 +110,17 @@ const CatsPage = () =>{
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                 {
-                    filteredBreeds.map(breed => 
+                    filteredBreeds.map(breed => (
                         <BreedCard
-                            key={breed.key}
+                            key={breed.id}
                             name={breed.name}
                             origin={breed.origin || 'Desconocido'}
                             description={breed.description || 'Sin descripcion disponible'}
-                            image={breed.image?.url}
+                            image={breed.image_url}
                             id={breed.id}
                             petType="gatos"
                         />
-                    )
+                    ))
                 }
             </div>
 

@@ -26,13 +26,15 @@ const DogDetailPage = () => {
     fetchBreed();
   }, [breedId]);
 
-  if (error) return <ErrorMessage message={error} />;
-  if (!breed) return <p className="text-center p-4">Cargando</p>;
+  if (error) return <p>Error: {error}</p>;
+  if (!breed) return <p>Cargando...</p>;
 
   return (
     <div className="p-4">
-
-      <BreedDetail breed={breed} petType="dog" />
+      <BreedDetail 
+        breed={breed} 
+        petType="dog"
+      />
     </div>
   );
 };
