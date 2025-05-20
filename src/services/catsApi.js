@@ -1,6 +1,7 @@
 // src/services/catsApi.js
 
 import { peticionesfetch } from "../utils/apiUtils";
+import CatModel from "../models/catModel";
 
 // 1. Obtenemos la clave de API desde las variables de entorno
 const CAT_API_KEY = import.meta.env.VITE_CAT_API_KEY || 'your-default-key';
@@ -13,7 +14,12 @@ export const getAllCatBreeds = async () => {
     const url = `${CAT_API_URL}/breeds`;
     const mensajeError = "Error fetching cat breed";
     
-    return peticionesfetch(url,CAT_API_KEY,mensajeError);
+    const response = await peticionesfetch(url,CAT_API_KEY,mensajeError);
+
+    // Assuming the API returns a JSON object with a 'data' property containing the array of breeds
+    console.log(response);
+    const catBreeds = response.map(breedData => new CatModel(breedData));
+    return catBreeds;
 
 };
 
