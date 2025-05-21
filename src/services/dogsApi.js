@@ -26,6 +26,26 @@ export const getDogById = async (breedId) => {
   return peticionesfetch(url,DOG_API_KEY, mensajeError);
 };
 
+export const getDogImageById = async (breedId) => {
+  try {
+    const dog = await getDogById(breedId);
+    return dog.data.images_urls[0];
+  } catch (error) {
+    console.error("Error fetching dog image:", error);
+    return null; // Or throw the error, depending on your error handling strategy
+  }
+};
+
+export const getDogImageUrlsById = async (breedId) => {
+  try {
+    const dog = await getDogById(breedId);
+    return dog.data.images_urls;
+  } catch (error) {
+    console.error("Error fetching dog images:", error);
+    return []; // Or throw the error, depending on your error handling strategy
+  }
+};
+
 export const getDogImagesByBreed = async (breedId) => {
  
 

@@ -27,15 +27,30 @@ export const getCatById = async (breedId) => {
 
     const url = `${CAT_API_URL}/${breedId}`;
     const mensajeError = 'Error fetching cat images';
-    return peticionesfetch(url,CAT_API_KEY,mensajeError);
+    const response =  await peticionesfetch(url,CAT_API_KEY,mensajeError);
+    const catBreed = response.data;
+    return catBreed;
     
 };
 
 // 9. Función para obtener imágenes de una raza específica
-export const getCatImagesByBreed = async (breedId) => {
+export const getCatImageById = async (breedId) => {
+  try {
+    const cat = await getCatById(breedId);
+    return cat.data.images_urls[0];
+  } catch (error) {
+    console.error("Error fetching cat image:", error);
+    return null; // Or throw the error, depending on your error handling strategy
+  }
+};
 
-    const url = `${CAT_API_URL}/images/search?breed_ids=${breedId}&limit=10`;
-    const mensajeError = 'Error fetching cat images';
-    return peticionesfetch(url,CAT_API_KEY,mensajeError);
-    
+//Para obtener lista de imagenes
+export const getCatImageUrlsById = async (breedId) => {
+  try {
+    const cat = await getCatById(breedId);
+    return cat.data.images_urls;
+  } catch (error) {
+    console.error("Error fetching cat images:", error);
+    return []; // Or throw the error, depending on your error handling strategy
+  }
 };
