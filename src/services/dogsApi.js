@@ -19,18 +19,32 @@ export const getAllDogBreeds = async () => {
 
 export const getDogById = async (breedId) => {
  
-
   const url = `${DOG_API_URL}/${breedId}`;
-  const mensajeError = 'Error id dog';
+  const mensajeError = 'Error fetching dog id';
+  const response =  await peticionesfetch(url,DOG_API_KEY,mensajeError);
+  const dogBreed = response.data;
+  return dogBreed;
 
-  return peticionesfetch(url,DOG_API_KEY, mensajeError);
 };
 
-export const getDogImagesByBreed = async (breedId) => {
- 
-
-  const url = `${DOG_API_URL}/images/search?breed_ids=${breedId}&limit=10`;
-  const mensajeError = 'Error fetching dog images';
-
-  return peticionesfetch(url,DOG_API_KEY, mensajeError);
+export const getDogImageById = async (breedId) => {
+  try {
+    const dog = await getDogById(breedId);
+    return dog.images_urls[0];
+  } catch (error) {
+    console.error("Error fetching dog image:", error);
+    return null; // Or throw the error, depending on your error handling strategy
+  }
 };
+
+export const getDogImageUrlsById = async (breedId) => {
+  try {
+    const dog = await getDogById(breedId);
+    return dog.images_urls;
+  } catch (error) {
+    console.error("Error fetching dog images:", error);
+    return []; // Or throw the error, depending on your error handling strategy
+  }
+};
+
+

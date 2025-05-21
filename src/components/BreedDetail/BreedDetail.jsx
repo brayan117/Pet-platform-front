@@ -1,7 +1,8 @@
 // src/components/BreedDetail/BreedDetail.jsx
 import { useState, useEffect } from 'react';
-import { getCatImagesByBreed } from '../../services/catsApi';
-import { getDogImagesByBreed } from '../../services/dogsApi';
+import { getCatImageUrlsById } from '../../services/catsApi';
+import { getDogImageUrlsById } from '../../services/dogsApi';
+import './BreedDetail.css';
 
 const BreedDetail = ({ breed, petType }) => {
   const [images, setImages] = useState('');
@@ -14,8 +15,15 @@ const BreedDetail = ({ breed, petType }) => {
       try {
         setLoading(true);
         
-        const data = breed.image_url;
-        
+        let data;
+        console.log(breed.id);
+        if (petType === "cat") {
+          data = await getCatImageUrlsById(breed.id);  
+        }else {
+          data = await getDogImageUrlsById(breed.id);  
+        }
+        console.log("mostrando Imagenes");
+        console.log(data);
         setImages(data);
         setError(null);
       } catch (err) {
@@ -45,12 +53,24 @@ const BreedDetail = ({ breed, petType }) => {
                 <span className="visually-hidden">Loading...</span>
             </div>
           )
-          : images ? (
-            <img 
-              src={images} 
-              alt={breed.name}
-              className="w-full h-64 object-contain rounded-lg" 
-            />
+          : images.length > 0 ? (
+            <div>
+              <img
+                src={images[0]}
+                alt={breed.name}
+                className="w-full h-64 object-contain rounded-lg mb-2"
+              />
+              <div className="image-gallery">
+                {images.slice(1).map((imageUrl, index) => (
+                  <img
+                    key={index}
+                    src={imageUrl}
+                    alt={`${breed.name} - ${index + 1}`}
+                    className="thumbnail rounded-lg mb-2"
+                  />
+                ))}
+              </div>
+            </div>
           ) : (
             <div className="w-full h-64 bg-gray-200 rounded-lg flex items-center justify-center">
               <p className="text-gray-500">No hay imágenes disponibles</p>
