@@ -1,0 +1,15 @@
+.image-gallery {
+  display: flex;
+  flex-direction: row; /* Display images in a row */
+  justify-content: center; /* Center images horizontally */
+  overflow-x: auto; /* Enable horizontal scrolling if needed */
+  padding-top: 10px;
+}
+
+.thumbnail {
+  width: 80px; /* Adjust as needed */
+  height: 80px; /* Adjust as needed */
+  object-fit: cover;
+  margin-right: 10px;
+  cursor: pointer;
+}

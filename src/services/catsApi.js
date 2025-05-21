@@ -1,27 +1,56 @@
 // src/services/catsApi.js
 
 import { peticionesfetch } from "../utils/apiUtils";
+import CatModel from "../models/catModel";
 
 // 1. Obtenemos la clave de API desde las variables de entorno
 const CAT_API_KEY = import.meta.env.VITE_CAT_API_KEY || 'your-default-key';
 // 2. Definimos la URL base de la API
-const CAT_API_URL = 'https://api.thecatapi.com/v1';
+const CAT_API_URL = 'https://petplatformback-duateac4dbh3bahj.canadacentral-01.azurewebsites.net/api/cats/breeds';
 
 // 3. Función para obtener todas las razas de gatos
 export const getAllCatBreeds = async () => {
 
-    const url = `${CAT_API_URL}/breeds`;
+    const url = `${CAT_API_URL}`;
     const mensajeError = "Error fetching cat breed";
     
-    return peticionesfetch(url,CAT_API_KEY,mensajeError);
+    const response = await peticionesfetch(url,CAT_API_KEY,mensajeError);
+
+    
+    console.log(response);
+    const catBreeds = response.data.map(breedData => new CatModel(breedData));
+    return catBreeds;
 
 };
 
-// 9. Función para obtener imágenes de una raza específica
-export const getCatImagesByBreed = async (breedId) => {
+export const getCatById = async (breedId) => {
 
-    const url = `${CAT_API_URL}/images/search?breed_ids=${breedId}&limit=10`;
-    const mensajeError = 'Error fetching cat images';
-    return peticionesfetch(url,CAT_API_KEY,mensajeError);
+    const url = `${CAT_API_URL}/${breedId}`;
+    const mensajeError = 'Error fetching cat id';
+    const response =  await peticionesfetch(url,CAT_API_KEY,mensajeError);
+    const catBreed = response.data;
+    return catBreed;
     
+};
+
+// 9. Función para obtener imágenes de una raza específica
+export const getCatImageById = async (breedId) => {
+  try {
+    const cat = await getCatById(breedId);
+    return cat.images_urls[0];
+  } catch (error) {
+    console.error("Error fetching cat image:", error);
+    return null; // Or throw the error, depending on your error handling strategy
+  }
+};
+
+//Para obtener lista de imagenes
+export const getCatImageUrlsById = async (breedId) => {
+  try {
+    const cat = await getCatById(breedId);
+    return cat.images_urls;
+  } catch (error) {
+    console.error("Error fetching cat images:", error);
+    return []; // Or throw the error, depending on your error handling strategy
+  }
 };

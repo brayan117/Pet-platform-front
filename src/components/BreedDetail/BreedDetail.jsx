@@ -1,25 +1,29 @@
 // src/components/BreedDetail/BreedDetail.jsx
 import { useState, useEffect } from 'react';
-import { getCatImagesByBreed } from '../../services/catsApi';
-import { getDogImagesByBreed } from '../../services/dogsApi';
+import { getCatImageUrlsById } from '../../services/catsApi';
+import { getDogImageUrlsById } from '../../services/dogsApi';
+import './BreedDetail.css';
 
 const BreedDetail = ({ breed, petType }) => {
-  const [images, setImages] = useState([]);
+  const [images, setImages] = useState('');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   
   useEffect(() => {
+    
     const fetchImages = async () => {
       try {
         setLoading(true);
+        
         let data;
-        
-        if (petType === 'cat') {
-          data = await getCatImagesByBreed(breed.id);
-        } else {
-          data = await getDogImagesByBreed(breed.id);
+        console.log(breed.id);
+        if (petType === "cat") {
+          data = await getCatImageUrlsById(breed.id);  
+        }else {
+          data = await getDogImageUrlsById(breed.id);  
         }
-        
+        console.log("mostrando Imagenes");
+        console.log(data);
         setImages(data);
         setError(null);
       } catch (err) {
@@ -30,12 +34,15 @@ const BreedDetail = ({ breed, petType }) => {
       }
     };
     
+    
     if (breed && breed.id) {
       fetchImages();
     }
   }, [breed, petType]);
   
   if (!breed) return null;
+  console.log(images);
+
   
   return (
     <div className="bg-white rounded-lg shadow-lg p-6">
@@ -47,28 +54,30 @@ const BreedDetail = ({ breed, petType }) => {
             </div>
           )
           : images.length > 0 ? (
-            <img 
-              src={images[0].url} 
-              alt={breed.name}
-              className="w-full h-64 object-contain rounded-lg" 
-            />
+            <div>
+              <img
+                src={images[0]}
+                alt={breed.name}
+                className="w-full h-64 object-contain rounded-lg mb-2"
+              />
+              <div className="image-gallery">
+                {images.slice(1).map((imageUrl, index) => (
+                  <img
+                    key={index}
+                    src={imageUrl}
+                    alt={`${breed.name} - ${index + 1}`}
+                    className="thumbnail rounded-lg mb-2"
+                  />
+                ))}
+              </div>
+            </div>
           ) : (
             <div className="w-full h-64 bg-gray-200 rounded-lg flex items-center justify-center">
               <p className="text-gray-500">No hay imágenes disponibles</p>
             </div>
-          )}
+          )}  
           
-          {/* Galería de miniaturas */}
-          <div className="grid grid-cols-4 gap-2 mt-4">
-            {images.slice(0, 4).map((img, index) => (
-              <img 
-                key={index}
-                src={img.url} 
-                alt={`${breed.name} ${index + 1}`}
-                className="w-full h-16 object-contain rounded cursor-pointer" 
-              />
-            ))}
-          </div>
+          
         </div>
         
         <div>
@@ -97,17 +106,7 @@ const BreedDetail = ({ breed, petType }) => {
             </div>
             
             {petType === 'cat' && (
-              <>
-                <div>
-                  <h3 className="text-md font-semibold mb-1">Nivel de afecto</h3>
-                  <p>{breed.affection_level ? `${breed.affection_level}/5` : 'N/A'}</p>
-                </div>
-                
-                <div>
-                  <h3 className="text-md font-semibold mb-1">Adaptabilidad</h3>
-                  <p>{breed.adaptability ? `${breed.adaptability}/5` : 'N/A'}</p>
-                </div>
-              </>
+              <></>
             )}
             
             {petType === 'dog' && (

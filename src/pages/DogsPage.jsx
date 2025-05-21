@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import BreedCard from "../components/BreedCard/BreedCard";
-import { getAllDogBreeds } from "../services/dogsApi";
+import { getAllDogBreeds, getDogImageById } from "../services/dogsApi";
 import BreedCardSkeleton from "../components/BreedCard/BreedCardSkeleton";
 import BreedFilters from "../components/Filters/BreedFilters";
 
@@ -142,17 +142,20 @@ const DogsPage = () =>{
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                 {
-                    filteredBreeds.map(breed => 
-                        <BreedCard
-                            key={breed.key}
-                            name={breed.name}
-                            origin={breed.origin || 'Desconocido'}
-                            description={breed.description || 'Sin descripcion disponible'}
-                            image={breed.image?.url}
-                            id={breed.id}
-                            petType="perros"
-                        />
-                    )
+                    filteredBreeds.map(breed => {
+                        //const imageUrl =  getDogImageById(breed.id);
+                        return (
+                            <BreedCard
+                                key={breed.id}
+                                name={breed.name}
+                                origin={breed.origin || 'Desconocido'}
+                                description={breed.description || 'Sin descripcion disponible'}
+                                image={breed.image_url || 'Sin imagen'}
+                                id={breed.id}
+                                petType="perros"
+                            />
+                        )
+                    })
                 }
             </div>
 

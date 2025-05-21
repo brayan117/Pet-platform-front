@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import BreedCard from "../components/BreedCard/BreedCard";
-import { getAllCatBreeds } from "../services/catsApi";
+import { getAllCatBreeds, getCatById } from "../services/catsApi";
 import BreedFilters from "../components/Filters/BreedFilters";
 import BreedCardSkeleton from "../components/BreedCard/BreedCardSkeleton";
 
@@ -59,7 +59,7 @@ const CatsPage = () =>{
 
         fetchBreeds();
     }, []); // Array vacío significa que se ejecuta solo una vez al montar    
-    console.log(breeds);
+    //console.log(breeds[0]);
     
     const filteredBreeds = breeds.filter(breed => {
         const matchesSearch = breed.name.toLowerCase().includes(filters.searchTerm.toLowerCase());
@@ -110,17 +110,18 @@ const CatsPage = () =>{
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                 {
-                    filteredBreeds.map(breed => 
+                    filteredBreeds.map(breed => (
+                        
                         <BreedCard
-                            key={breed.key}
+                            key={breed.id}
                             name={breed.name}
                             origin={breed.origin || 'Desconocido'}
                             description={breed.description || 'Sin descripcion disponible'}
-                            image={breed.image?.url}
+                            image={breed.image_url}
                             id={breed.id}
                             petType="gatos"
                         />
-                    )
+                    ))
                 }
             </div>
 
