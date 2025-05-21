@@ -1,15 +1,29 @@
 import { peticionesfetch } from "../utils/apiUtils";
+import DogModel from "../models/dogModel";
 
 // src/services/dogsApi.js
 const DOG_API_KEY = import.meta.env.VITE_DOG_API_KEY || 'your-default-key';
-const DOG_API_URL = 'https://api.thedogapi.com/v1';
+const DOG_API_URL = 'https://petplatformback-duateac4dbh3bahj.canadacentral-01.azurewebsites.net/api/dogs/breeds';
 
 export const getAllDogBreeds = async () => {
   
-  const url = `${DOG_API_URL}/breeds`;
+  const url = `${DOG_API_URL}`;
   const mensajeError = 'Error fetching dog breeds';
 
-  return peticionesfetch(url, DOG_API_KEY, mensajeError);
+  const response = await peticionesfetch(url, DOG_API_KEY, mensajeError);
+
+  // Assuming the API returns a JSON object with a 'data' property containing the array of breeds
+  const dogBreeds = response.data.map(breedData => new DogModel(breedData));
+  return dogBreeds;
+};
+
+export const getDogById = async (breedId) => {
+ 
+
+  const url = `${DOG_API_URL}/${breedId}`;
+  const mensajeError = 'Error id dog';
+
+  return peticionesfetch(url,DOG_API_KEY, mensajeError);
 };
 
 export const getDogImagesByBreed = async (breedId) => {

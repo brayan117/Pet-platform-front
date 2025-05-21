@@ -144,11 +144,11 @@ const DogsPage = () =>{
                 {
                     filteredBreeds.map(breed => 
                         <BreedCard
-                            key={breed.key}
+                            key={breed.id}
                             name={breed.name}
                             origin={breed.origin || 'Desconocido'}
                             description={breed.description || 'Sin descripcion disponible'}
-                            image={breed.image?.url}
+                            image={breed.image_url}
                             id={breed.id}
                             petType="perros"
                         />
