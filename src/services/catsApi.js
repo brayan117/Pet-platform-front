@@ -26,7 +26,7 @@ export const getAllCatBreeds = async () => {
 export const getCatById = async (breedId) => {
 
     const url = `${CAT_API_URL}/${breedId}`;
-    const mensajeError = 'Error fetching cat images';
+    const mensajeError = 'Error fetching cat id';
     const response =  await peticionesfetch(url,CAT_API_KEY,mensajeError);
     const catBreed = response.data;
     return catBreed;
@@ -37,7 +37,7 @@ export const getCatById = async (breedId) => {
 export const getCatImageById = async (breedId) => {
   try {
     const cat = await getCatById(breedId);
-    return cat.data.images_urls[0];
+    return cat.images_urls[0];
   } catch (error) {
     console.error("Error fetching cat image:", error);
     return null; // Or throw the error, depending on your error handling strategy
@@ -48,7 +48,7 @@ export const getCatImageById = async (breedId) => {
 export const getCatImageUrlsById = async (breedId) => {
   try {
     const cat = await getCatById(breedId);
-    return cat.data.images_urls;
+    return cat.images_urls;
   } catch (error) {
     console.error("Error fetching cat images:", error);
     return []; // Or throw the error, depending on your error handling strategy

@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import BreedCard from "../components/BreedCard/BreedCard";
-import { getAllCatBreeds, getCatById, getCatImagesByBreed } from "../services/catsApi";
+import { getAllCatBreeds, getCatById } from "../services/catsApi";
 import BreedFilters from "../components/Filters/BreedFilters";
 import BreedCardSkeleton from "../components/BreedCard/BreedCardSkeleton";
 
