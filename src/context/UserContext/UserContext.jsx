@@ -1,5 +1,5 @@
 import { createContext, useState, useEffect } from "react";
-import { getAllUsers, updateUser } from "../../services/usersApi";
+import { getAllUsers, updateUser, createUser, deleteUser } from "../../services/usersApi";
 
 export const UserContext = createContext();
 
@@ -10,9 +10,7 @@ export const UserProvider = ({ children }) => {
 
   useEffect(() => {
     const fetchUsers = async () => {
-      //console('Llamando usuarios');
       const fetchedUsers = await getAllUsers();
-      //console(fetchUsers);
       setUsers(fetchedUsers);
       if (fetchedUsers.length > 0) {
         setCurrentUserId(fetchedUsers[0].id);
@@ -40,8 +38,40 @@ export const UserProvider = ({ children }) => {
     }
   };
 
+  const addUser = async (newUserData) => {
+    try {
+      const newUser = await createUser(newUserData);
+      setUsers([...users, newUser]);
+      setCurrentUserId(newUser.id);
+      setCurrentUser(newUser);
+      return newUser;
+    } catch (error) {
+      console.error("Error creating user:", error);
+      throw error;
+    }
+  };
+
+ const removeUser = async (userId) => {
+    try {
+      await deleteUser(userId);
+      const updatedUsers = users.filter(user => user.id !== userId);
+      setUsers([...updatedUsers]);
+      if (userId === currentUserId) {
+        if (updatedUsers.length > 0) {
+          setCurrentUserId(updatedUsers[0].id);
+          setCurrentUser(updatedUsers[0]);
+        } else {
+          setCurrentUserId(null);
+          setCurrentUser(null);
+        }
+      }
+    } catch (error) {
+      console.error("Error deleting user:", error);
+    }
+  };
+
   return (
-    <UserContext.Provider value={{ users, currentUser, setCurrentUserId, updateCurrentUser }}>
+    <UserContext.Provider value={{ users, currentUser, setCurrentUserId, updateCurrentUser, addUser, removeUser }}>
       {children}
     </UserContext.Provider>
   );

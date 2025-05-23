@@ -24,15 +24,26 @@ export const getUserById = async (userId) => {
 
 export const createUser = async (userData) => {
     const url = `${USER_API_URL}`;
-    const mensajeError = "Error creating user";
-    const response = await peticionesfetch(url, API_KEY, mensajeError, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(userData)
-    });
-    return response.data;
+    try {
+        const response = await fetch(url, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'x-api-key': API_KEY
+            },
+            body: JSON.stringify(userData)
+        });
+
+        if (!response.ok) {
+            throw new Error(`Error creating user: ${response.status}`);
+        }
+
+        const data = await response.json();
+        return new UserModel(data);
+    } catch (error) {
+        console.error("Error creating user:", error);
+        throw error;
+    }
 };
 
 export const updateUser = async (userId, userData) => {
@@ -50,9 +61,22 @@ export const updateUser = async (userId, userData) => {
 
 export const deleteUser = async (userId) => {
     const url = `${USER_API_URL}/${userId}`;
-    const mensajeError = "Error deleting user";
-    const response = await peticionesfetch(url, API_KEY, mensajeError, {
-        method: 'DELETE'
-    });
-    return response.data;
+    try {
+        const response = await fetch(url, {
+            method: 'DELETE',
+            headers: {
+                'x-api-key': API_KEY
+            }
+        });
+
+        if (!response.ok) {
+            throw new Error(`Error deleting user: ${response.status}`);
+        }
+
+        const data = await response.json();
+        return data;
+    } catch (error) {
+        console.error("Error deleting user:", error);
+        throw error;
+    }
 };
