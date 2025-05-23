@@ -121,8 +121,11 @@ export const addDogToFavorites = async (userId, breedId) => {
     }
 };
 
-export const removeFavorite = async (userId, breedId, petType = 'cat') => {
-    const url = `${USER_API_URL}/${userId}/favorites/${breedId}?pet_type=${petType}`;
+export const removeFavorite = async (userId, breedId, petType) => {
+    let url = `${USER_API_URL}/${userId}/favorites/${breedId}`;
+    if (petType === 'perro') {
+        url += `?pet_type=dog`;
+    }
     try {
         const response = await fetch(url, {
             method: 'DELETE',
