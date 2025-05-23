@@ -4,6 +4,10 @@ import { UserContext } from "../../context/UserContext/UserContext";
 const UserBar = () => {
   const { users, currentUser, setCurrentUserId } = useContext(UserContext);
 
+  if (!currentUser || users.length === 0) {
+    return <div className="bg-gray-100 border-b border-gray-300 p-2">Loading...</div>;
+  }
+
   return (
     <div className="bg-gray-100 border-b border-gray-300 p-2 flex place-items-end">
       <select
