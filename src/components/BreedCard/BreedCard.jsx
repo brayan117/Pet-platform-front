@@ -12,12 +12,14 @@ const BreedCard = ({name, origin , description, image, id, petType}) => {
     const handleToggleFavorite = async () => {
       const willBeFavorite = !isFavorite(id, tipoMascotaString);
       await toggleFavorite(id, petType === "gatos" ? "gato" : "perro");
-      if (willBeFavorite) {
-        alert("¡Favorito agregado correctamente!");
-      } else {
-        alert("¡Favorito eliminado correctamente!");
-      }
-      window.location.reload();
+      setTimeout(() => {
+        if (willBeFavorite) {
+          alert("¡Favorito agregado correctamente!");
+        } else {
+          alert("¡Favorito eliminado correctamente!");
+        }
+        window.location.reload();
+      }, 250);
     };
 
     return (

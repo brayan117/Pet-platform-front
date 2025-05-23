@@ -14,6 +14,10 @@ const UserBar = () => {
       const newUser = await addUser({ nombre: newUserName });
       setNewUserName("");
       setCurrentUserId(newUser.id);
+      setTimeout(() => {
+        alert("Usuario creado correctamente!");
+        window.location.reload();
+      }, 750);
     }
   };
 
