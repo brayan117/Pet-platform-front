@@ -80,3 +80,86 @@ export const deleteUser = async (userId) => {
         throw error;
     }
 };
+
+export const addCatToFavorites = async (userId, breedId) => {
+    const url = `${USER_API_URL}/${userId}/favorites/cats/${breedId}`;
+    try {
+        const response = await fetch(url, {
+            method: 'POST',
+            headers: {
+                'x-api-key': API_KEY
+            }
+        });
+        if (!response.ok) {
+            throw new Error(`Error adding cat to favorites: ${response.status}`);
+        }
+        const data = await response.json();
+        return data;
+    } catch (error) {
+        console.error("Error adding cat to favorites:", error);
+        throw error;
+    }
+};
+
+export const addDogToFavorites = async (userId, breedId) => {
+    const url = `${USER_API_URL}/${userId}/favorites/dogs/${breedId}`;
+    try {
+        const response = await fetch(url, {
+            method: 'POST',
+            headers: {
+                'x-api-key': API_KEY
+            }
+        });
+        if (!response.ok) {
+            throw new Error(`Error adding dog to favorites: ${response.status}`);
+        }
+        const data = await response.json();
+        return data;
+    } catch (error) {
+        console.error("Error adding dog to favorites:", error);
+        throw error;
+    }
+};
+
+export const removeFavorite = async (userId, breedId, petType = 'cat') => {
+    const url = `${USER_API_URL}/${userId}/favorites/${breedId}?pet_type=${petType}`;
+    try {
+        const response = await fetch(url, {
+            method: 'DELETE',
+            headers: {
+                'x-api-key': API_KEY
+            }
+        });
+        if (!response.ok) {
+            throw new Error(`Error removing favorite: ${response.status}`);
+        }
+        const data = await response.json();
+        return data;
+    } catch (error) {
+        console.error("Error removing favorite:", error);
+        throw error;
+    }
+};
+
+export const getFavorites = async (userId, petType) => {
+    let url = `${USER_API_URL}/${userId}/favorites`;
+    if (petType) {
+        url += `?pet_type=${petType}`;
+    }
+    try {
+        const response = await fetch(url, {
+            method: 'GET',
+            headers: {
+                'x-api-key': API_KEY
+            }
+        });
+        if (!response.ok) {
+            throw new Error(`Error getting favorites: ${response.status}`);
+        }
+        const data = await response.json();
+        return data.data;
+    } catch (error) {
+        console.error("Error getting favorites:", error);
+        throw error;
+    }
+};

@@ -1,4 +1,3 @@
-
 import { Link } from 'react-router-dom';
 import { useContext } from "react";
 import { FavoritesContext } from "../../context/FavoritesContext/FavoritesContext";
@@ -6,8 +5,20 @@ import { FaHeart, FaRegHeart } from "react-icons/fa";
 
 const BreedCard = ({name, origin , description, image, id, petType}) => {
 
-    const { isFavorite, toggleFavorite } = useContext(FavoritesContext);
-    const favorito = isFavorite(id);
+    const { favorites, isFavorite, toggleFavorite } = useContext(FavoritesContext);
+    const tipoMascotaString = petType === "gatos" ? "gato" : "perro";
+    const favorito = isFavorite(id, tipoMascotaString);
+
+    const handleToggleFavorite = async () => {
+      const willBeFavorite = !isFavorite(id, tipoMascotaString);
+      await toggleFavorite(id, petType === "gatos" ? "gato" : "perro");
+      if (willBeFavorite) {
+        alert("¡Favorito agregado correctamente!");
+      } else {
+        alert("¡Favorito eliminado correctamente!");
+      }
+      window.location.reload();
+    };
 
     return (
         <div className="bg-white rounded-lg shadow-md p-4 relative flex flex-col justify-between">
@@ -30,11 +41,11 @@ const BreedCard = ({name, origin , description, image, id, petType}) => {
                     </Link>
                     {/* Botón de favorito */}
                     <button
-                      onClick={() => toggleFavorite(id, petType === "gatos" ? "gato" : "perro")}
+                      onClick={handleToggleFavorite}
                       className="text-red-500 text-xl"
                       title={favorito ? "Quitar de favoritos" : "Agregar a favoritos"}
                     >
-                      {favorito ? <FaHeart /> : <FaRegHeart />}
+                      {isFavorite(id, tipoMascotaString) ? "Quitar de favoritos" : "Agregar a favoritos"}
                     </button>
                 </div>
             </div>

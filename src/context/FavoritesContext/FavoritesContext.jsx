@@ -1,41 +1,66 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import { UserContext } from "../UserContext/UserContext";
+import { addCatToFavorites, addDogToFavorites, removeFavorite } from "../../services/usersApi";
 
 export const FavoritesContext = createContext();
 
 export const FavoritesProvider = ({ children }) => {
-  const { currentUser, updateCurrentUser } = useContext(UserContext);
+  const { currentUser } = useContext(UserContext);
   const [favorites, setFavorites] = useState([]);
 
   useEffect(() => {
     if (currentUser) {
-      setFavorites(currentUser.mascotasFavoritas || []);
+      const mascotasFavoritas = currentUser.mascotasFavoritas || { cats: [], dogs: [] };
+      const combinedFavorites = [...(mascotasFavoritas?.cats || []), ...(mascotasFavoritas?.dogs || [])];
+      setFavorites(combinedFavorites);
+    } else {
+      setFavorites([]);
     }
   }, [currentUser]);
 
-  const isFavorite = (idMascota) => {
-    return favorites.some((fav) => fav.idMascota === idMascota);
+  const isFavorite = (idMascota, tipoMascota) => {
+    if (!currentUser) return false;
+    const mascotasFavoritas = currentUser?.mascotasFavoritas || { cats: [], dogs: [] };
+    const favoritesArray = tipoMascota === "gato" ? mascotasFavoritas.cats : mascotasFavoritas.dogs;
+    return favoritesArray?.includes(idMascota) || false;
   };
 
   const addFavorite = async (idMascota, tipoMascota) => {
-    if (!isFavorite(idMascota)) {
-      const newFavorites = [...favorites, { idMascota, tipoMascota }];
-      setFavorites(newFavorites);
-      const updatedUser = { ...currentUser, mascotasFavoritas: newFavorites };
-      await updateCurrentUser(updatedUser);
+    if (!currentUser) return;
+    try {
+      if (tipoMascota === "gato") {
+        await addCatToFavorites(currentUser.id, idMascota);
+      } else {
+        await addDogToFavorites(currentUser.id, idMascota);
+      }
+      const mascotasFavoritas = currentUser.mascotasFavoritas || { cats: [], dogs: [] };
+      const combinedFavorites = [...(mascotasFavoritas?.cats || []), ...(mascotasFavoritas?.dogs || [])];
+      setFavorites(combinedFavorites);
+      if (tipoMascota === "gato") {
+        setFavorites(prevFavorites => [...prevFavorites, idMascota]);
+      } else {
+        setFavorites(prevFavorites => [...prevFavorites, idMascota]);
+      }
+    } catch (error) {
+      console.error("Error adding favorite:", error);
     }
   };
 
-  const removeFavorite = async (idMascota) => {
-    const newFavorites = favorites.filter((fav) => fav.idMascota !== idMascota);
-    setFavorites(newFavorites);
-    const updatedUser = { ...currentUser, mascotasFavoritas: newFavorites };
-    await updateCurrentUser(updatedUser);
+  const removeFavoritePet = async (idMascota, tipoMascota) => {
+    if (!currentUser) return;
+    try {
+      await removeFavorite(currentUser.id, idMascota, tipoMascota);
+      const mascotasFavoritas = currentUser.mascotasFavoritas || { cats: [], dogs: [] };
+      const combinedFavorites = [...(mascotasFavoritas?.cats || []), ...(mascotasFavoritas?.dogs || [])];
+      setFavorites(prevFavorites => prevFavorites.filter(fav => fav !== idMascota));
+    } catch (error) {
+      console.error("Error removing favorite:", error);
+    }
   };
 
   const toggleFavorite = (idMascota, tipoMascota) => {
-    if (isFavorite(idMascota)) {
-      removeFavorite(idMascota);
+    if (isFavorite(idMascota, tipoMascota)) {
+      removeFavoritePet(idMascota, tipoMascota);
     } else {
       addFavorite(idMascota, tipoMascota);
     }
