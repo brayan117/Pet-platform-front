@@ -42,10 +42,10 @@ const BreedComparatorPage = () => {
           setBreed1Data({ ...breed, image_url: imageUrl });
         }
       } else if (petType === 'perros' && selectedBreed1) {
-        const breedIdNum = parseInt(selectedBreed1, 10); // Convert to integer for dogs
+        const breedIdNum = parseInt(selectedBreed1, 10); 
         const breed = dogBreeds.find(b => b.id === breedIdNum);
         if (breed) {
-          const imageUrl = await getDogImageById(breedIdNum); // Pass integer ID to API call
+          const imageUrl = await getDogImageById(breedIdNum);
           setBreed1Data({ ...breed, image_url: imageUrl });
         }
       } else {
@@ -59,10 +59,10 @@ const BreedComparatorPage = () => {
           setBreed2Data({ ...breed, image_url: imageUrl });
         }
       } else if (petType === 'perros' && selectedBreed2) {
-        const breedIdNum = parseInt(selectedBreed2, 10); // Convert to integer for dogs
+        const breedIdNum = parseInt(selectedBreed2, 10); 
         const breed = dogBreeds.find(b => b.id === breedIdNum);
         if (breed) {
-          const imageUrl = await getDogImageById(breedIdNum); // Pass integer ID to API call
+          const imageUrl = await getDogImageById(breedIdNum);
           setBreed2Data({ ...breed, image_url: imageUrl });
         }
       } else {
