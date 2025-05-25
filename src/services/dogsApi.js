@@ -3,7 +3,7 @@ import DogModel from "../models/dogModel";
 
 // src/services/dogsApi.js
 const DOG_API_KEY = import.meta.env.VITE_DOG_API_KEY || 'your-default-key';
-const DOG_API_URL = 'https://petplatformback-duateac4dbh3bahj.canadacentral-01.azurewebsites.net/api/dogs/breeds';
+const DOG_API_URL = import.meta.env.VITE_DOG_API_URL;
 
 export const getAllDogBreeds = async () => {
   
@@ -46,5 +46,3 @@ export const getDogImageUrlsById = async (breedId) => {
     return []; // Or throw the error, depending on your error handling strategy
   }
 };
-
-

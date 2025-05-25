@@ -6,7 +6,7 @@ import CatModel from "../models/catModel";
 // 1. Obtenemos la clave de API desde las variables de entorno
 const CAT_API_KEY = import.meta.env.VITE_CAT_API_KEY || 'your-default-key';
 // 2. Definimos la URL base de la API
-const CAT_API_URL = 'https://petplatformback-duateac4dbh3bahj.canadacentral-01.azurewebsites.net/api/cats/breeds';
+const CAT_API_URL = import.meta.env.VITE_CAT_API_URL;
 
 // 3. Función para obtener todas las razas de gatos
 export const getAllCatBreeds = async () => {
