@@ -9,9 +9,9 @@ import DogDetailPage from "./pages/DogDetailPage";
 import UserBar from "./components/UserBar/UserBar";
 import CurrentUserInfo from "./components/UserBar/CurrentUserInfo";
 import FavoritesPage from "./pages/FavoritesPage";
+import BreedComparatorPage from "./pages/BreedComparatorPage"; // Import the new page
 
 const Home = () => <div className="p-4">Home Page</div>
-const MatcherPage = () => <div className="p-4">Matcher Page</div>
 
 function App() {
     return (
@@ -28,7 +28,8 @@ function App() {
                         <Route path="/perros" element={<DogsPage/>}/>
                         <Route path="/perros/:breedId" element={<DogDetailPage />} />
                         <Route path="favoritos" element={<FavoritesPage />} />
-                        <Route path="/matcher" element={<MatcherPage/>}/>
+                        <Route path="/matcher" element={<BreedComparatorPage/>}/>
+                        <Route path="/comparador" element={<BreedComparatorPage />} /> {/* Add the new route */}
                     </Routes>
                 </main>
             </div>
