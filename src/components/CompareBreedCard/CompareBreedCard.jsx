@@ -10,7 +10,7 @@ const CompareBreedCard = ({ breed, petType }) => {
           <img
             src={breed.image_url}
             alt={breed.name}
-            className="w-full h-full object-cover"
+            className="w-full h-full object-contain"
           />
         ) : (
           <span className="text-gray-500">No hay imagen disponible</span>
@@ -36,6 +36,11 @@ const CompareBreedCard = ({ breed, petType }) => {
               {breed.breed_group && <p><strong>Grupo:</strong> {breed.breed_group}</p>}
               {breed.bred_for && <p><strong>Criado para:</strong> {breed.bred_for}</p>}
               {breed.temperament && <p><strong>Temperamento:</strong> {breed.temperament}</p>}
+              {breed.life_span && <p><strong>Esperanza de Vida:</strong> {breed.life_span}</p>}
+              {breed.origin && <p><strong>Origen:</strong> {breed.origin}</p>}
+              {breed.weight?.metric && <p><strong>Peso (kg):</strong> {breed.weight.metric}</p>}
+              {breed.height?.metric && <p><strong>Altura (cm):</strong> {breed.height.metric}</p>}
+              
             </>
           )}
         </div>

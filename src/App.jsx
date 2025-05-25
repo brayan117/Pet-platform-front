@@ -12,7 +12,6 @@ import FavoritesPage from "./pages/FavoritesPage";
 import BreedComparatorPage from "./pages/BreedComparatorPage"; // Import the new page
 
 const Home = () => <div className="p-4">Home Page</div>
-const MatcherPage = () => <div className="p-4">Matcher Page</div>
 
 function App() {
     return (
