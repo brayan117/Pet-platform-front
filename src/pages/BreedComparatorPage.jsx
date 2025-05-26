@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState } from 'react';
 import CompareBreedCard from '../components/CompareBreedCard/CompareBreedCard';
 import { getAllCatBreeds, getCatImageById } from '../services/catsApi';
 import { getAllDogBreeds, getDogImageById } from '../services/dogsApi';
+import SimpleLoader from '../components/Loader/SimpleLoader';
 
 const BreedComparatorPage = () => {
   const [petType, setPetType] = useState('perros');
@@ -129,7 +130,7 @@ const BreedComparatorPage = () => {
         </div>
 
         {loading && (
-          <p className="text-center text-gray-500 text-lg font-medium">Cargando razas...</p>
+          <span className="text-center text-gray-500 text-lg font-medium"><SimpleLoader /></span>
         )}
 
         {error && (

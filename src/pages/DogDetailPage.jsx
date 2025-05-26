@@ -2,6 +2,7 @@ import { useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { getAllDogBreeds } from '../services/dogsApi';
 import BreedDetail from '../components/BreedDetail/BreedDetail';
+import SimpleLoader from '../components/Loader/SimpleLoader';
 
 const DogDetailPage = () => {
   const { breedId } = useParams();
@@ -18,6 +19,7 @@ const DogDetailPage = () => {
         setBreed(selected);
       } catch (err) {
         setError("No se pudo cargar la raza.");
+        console.error(err);
       } finally {
         setLoading(false);
       }
@@ -27,7 +29,7 @@ const DogDetailPage = () => {
   }, [breedId]);
 
   if (error) return <p>Error: {error}</p>;
-  if (!breed) return <p>Cargando...</p>;
+  if (!breed || loading) return <SimpleLoader />;
 
   return (
     <div className="p-4">

@@ -5,7 +5,9 @@ import {
   getAllUsers,
   updateUser,
 } from "../../services/usersApi";
+import { toast } from "react-toastify";
 
+// eslint-disable-next-line react-refresh/only-export-components
 export const UserContext = createContext();
 
 export const UserProvider = ({ children }) => {
@@ -41,6 +43,7 @@ export const UserProvider = ({ children }) => {
       );
       setCurrentUser(updatedUser);
     } catch (error) {
+      toast.error("Error actualizando usuario. Intenta nuevamente.");
       console.error("Error updating user:", error);
     }
   };
@@ -55,6 +58,7 @@ export const UserProvider = ({ children }) => {
 
       return newUser;
     } catch (error) {
+      toast.error("Error creando usuario. Intenta nuevamente.");
       console.error("Error creating user:", error);
       throw error;
     }
@@ -78,6 +82,7 @@ export const UserProvider = ({ children }) => {
         }
       }
     } catch (error) {
+      toast.error("Error eliminando usuario. Intenta nuevamente.");
       console.error("Error deleting user:", error);
     }
   };
@@ -88,6 +93,7 @@ export const UserProvider = ({ children }) => {
         users,
         currentUser,
         setCurrentUserId,
+        setCurrentUser,
         updateCurrentUser,
         addUser,
         removeUser,

@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import BreedCard from "../components/BreedCard/BreedCard";
 import BreedFilters from "../components/Filters/BreedFilters";
 import { getAllCatBreeds } from "../services/catsApi";
+import SimpleLoader from "../components/Loader/SimpleLoader";
 
 const CatsPage = () => {
   const [breeds, setBreeds] = useState([]);
@@ -83,7 +84,7 @@ const CatsPage = () => {
 
       {loading ? (
         <div className="flex flex-col items-center justify-center h-64">
-          <div className="animate-spin rounded-full h-12 w-12 border-t-4 border-blue-600 border-opacity-50 mb-4"></div>
+          <SimpleLoader />
           <p className="text-gray-500">Cargando razas de gatos...</p>
         </div>
       ) : error ? (

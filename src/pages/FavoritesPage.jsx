@@ -3,6 +3,8 @@ import BreedCard from "../components/BreedCard/BreedCard";
 import { UserContext } from "../context/UserContext/UserContext";
 import { getAllCatBreeds } from "../services/catsApi";
 import { getAllDogBreeds } from "../services/dogsApi";
+import { toast } from "react-toastify";
+import SimpleLoader from "../components/Loader/SimpleLoader";
 
 const FavoritesPage = () => {
   const { currentUser } = useContext(UserContext);
@@ -20,6 +22,7 @@ const FavoritesPage = () => {
         setAllBreeds({ gatos: cats, perros: dogs });
       } catch (error) {
         console.error("Error al cargar las razas:", error);
+        toast.error("Error al cargar las razas. Intenta nuevamente.");
       } finally {
         setLoading(false);
       }
@@ -36,7 +39,7 @@ const FavoritesPage = () => {
   if (!currentUser) {
     return (
       <div className="flex justify-center items-center min-h-[50vh] text-gray-600 text-lg">
-        Cargando usuario...
+        <SimpleLoader />
       </div>
     );
   }
@@ -44,7 +47,6 @@ const FavoritesPage = () => {
   const { mascotasFavoritas } = currentUser;
   const favoriteCats = mascotasFavoritas?.cats || [];
   const favoriteDogs = mascotasFavoritas?.dogs || [];
-
   const allFavorites = [
     ...favoriteCats.map((id) => ({ id, tipo: "gato" })),
     ...favoriteDogs.map((id) => ({ id, tipo: "perro" })),

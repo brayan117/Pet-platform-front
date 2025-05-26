@@ -1,6 +1,6 @@
 import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
 
-import logo from './assets/logo.jpg';
+import logo from "./assets/logo.jpg";
 import Header from "./components/Header/Header";
 import CurrentUserInfo from "./components/UserBar/CurrentUserInfo";
 import UserBar from "./components/UserBar/UserBar";
@@ -10,6 +10,8 @@ import CatsPage from "./pages/CatsPage";
 import DogDetailPage from "./pages/DogDetailPage";
 import DogsPage from "./pages/DogsPage";
 import FavoritesPage from "./pages/FavoritesPage";
+import { ToastContainer } from "react-toastify";
+
 const Home = () => (
   <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
     <img
@@ -45,6 +47,15 @@ function App() {
             {/* Add the new route */}
           </Routes>
         </main>
+        <ToastContainer
+          autoClose={3000}
+          pauseOnHover
+          position="top-right"
+          closeOnClick
+          closeButton
+          limit={4}
+          theme="colored"
+        />
       </div>
     </Router>
   );
