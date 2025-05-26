@@ -8,7 +8,6 @@ const UserBar = () => {
   const [message, setMessage] = useState("");
 
   const handleAddUser = async () => {
-    debugger
     if (!newUserName.trim()) return;
 
     const newUser = await addUser({ nombre: newUserName });
@@ -21,7 +20,6 @@ const UserBar = () => {
 
   const handleDeleteUser = async () => {
     if (!currentUser) return;
-    debugger
     await removeUser(currentUser.id);
     setMessage("🗑️ Usuario eliminado correctamente");
 
