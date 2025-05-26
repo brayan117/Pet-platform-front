@@ -1,7 +1,7 @@
 // src/services/catsApi.js
 
-import { peticionesfetch } from "../utils/apiUtils";
 import CatModel from "../models/catModel";
+import { peticionesfetch } from "../utils/apiUtils";
 
 // 1. Obtenemos la clave de API desde las variables de entorno
 const CAT_API_KEY = import.meta.env.VITE_CAT_API_KEY || 'your-default-key';
