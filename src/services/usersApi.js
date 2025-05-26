@@ -1,7 +1,7 @@
 // src/services/usersApi.js
 
-import { peticionesfetch, fetchApi } from "../utils/apiUtils";
 import UserModel from "../models/userModel";
+import { fetchApi, peticionesfetch } from "../utils/apiUtils";
 
 const USER_API_URL = import.meta.env.VITE_USER_API_URL;
 const API_KEY = import.meta.env.VITE_USER_API_KEY;
@@ -26,7 +26,7 @@ export const createUser = async (userData) => {
     const url = `${USER_API_URL}`;
     const mensajeError = "Error creating user";
     const data = await fetchApi(url, 'POST', API_KEY, mensajeError, userData);
-    return new UserModel(data);
+    return new UserModel(data.data);
 };
 
 export const updateUser = async (userId, userData) => {

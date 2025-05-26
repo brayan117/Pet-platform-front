@@ -32,7 +32,6 @@ function App() {
       <div className="App">
         <Header />
         <UserBar />
-
         <main className="w-full">
           <Routes>
             <Route path="/" element={<Home />} />

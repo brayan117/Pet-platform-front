@@ -40,7 +40,7 @@ export const fetchApi = async (url, method, apiKey, errorMessage, body = null) =
 
     // For DELETE requests, the response might not have a body
     if (response.status === 204 || method === 'DELETE') {
-      return {}; // Return an empty object for no content or delete success
+      return true; 
     }
 
     return await response.json();

@@ -2,38 +2,46 @@ import { useContext, useState } from "react";
 import { UserContext } from "../../context/UserContext/UserContext";
 
 const UserBar = () => {
-  const { users, currentUser, setCurrentUserId, addUser, removeUser } = useContext(UserContext);
+  const { users, currentUser, setCurrentUserId, addUser, removeUser } =
+    useContext(UserContext);
   const [newUserName, setNewUserName] = useState("");
-
-  if (!currentUser || users.length === 0) {
-    return <div className="bg-gray-100 border-b border-gray-300 p-2">Loading...</div>;
-  }
+  const [message, setMessage] = useState("");
 
   const handleAddUser = async () => {
-    if (newUserName) {
-      const newUser = await addUser({ nombre: newUserName });
-      setNewUserName("");
-      setCurrentUserId(newUser.id);
-      setTimeout(() => {
-        alert("Usuario creado correctamente!");
-        window.location.reload();
-      }, 750);
-    }
+    debugger
+    if (!newUserName.trim()) return;
+
+    const newUser = await addUser({ nombre: newUserName });
+    setNewUserName("");
+    setCurrentUserId(newUser.id);
+    setMessage("✅ Usuario creado correctamente");
+
+    setTimeout(() => setMessage(""), 3000);
   };
 
-  const handleDeleteUser = () => {
-    if (currentUser) {
-      removeUser(currentUser.id);
-    }
+  const handleDeleteUser = async () => {
+    if (!currentUser) return;
+    debugger
+    await removeUser(currentUser.id);
+    setMessage("🗑️ Usuario eliminado correctamente");
+
+    setTimeout(() => setMessage(""), 3000);
   };
+
+  if (!currentUser || users.length === 0) {
+    return (
+      <div className="bg-gray-100 border-b border-gray-300 p-2">
+        Cargando usuarios...
+      </div>
+    );
+  }
 
   return (
-    <div className="bg-gray-100 border-b border-gray-300 p-2 flex place-items-end">
+    <div className="bg-gray-100 border-b border-gray-300 p-3 flex flex-wrap items-center gap-2">
       <select
         value={currentUser.id}
         onChange={(e) => setCurrentUserId(e.target.value)}
-        className="text-xs px-2 py-1 rounded border border-gray-300 bg-white text-gray-700 focus:outline-none focus:ring-1 focus:ring-blue-400"
-        style={{ maxWidth: 160 }}
+        className="text-sm px-2 py-1 rounded border border-gray-300 bg-white text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-400"
       >
         {users.map((user) => (
           <option key={user.id} value={user.id}>
@@ -41,25 +49,44 @@ const UserBar = () => {
           </option>
         ))}
       </select>
+
       <input
         type="text"
-        placeholder="Nombre del nuevo usuario"
+        placeholder="Nuevo usuario"
         value={newUserName}
         onChange={(e) => setNewUserName(e.target.value)}
-        className="text-xs px-2 py-1 rounded border border-gray-300 bg-white text-gray-700 focus:outline-none focus:ring-1 focus:ring-blue-400 ml-2"
+        className="text-sm px-2 py-1 rounded border border-gray-300 bg-white text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-400"
       />
+
       <button
         onClick={handleAddUser}
-        className="bg-green-500 hover:bg-green-700 text-white text-xs font-bold py-1 px-2 rounded ml-2"
+        disabled={!newUserName.trim()}
+        className={`text-sm font-semibold py-1 px-3 rounded transition-colors ${
+          newUserName.trim()
+            ? "bg-green-500 hover:bg-green-600 text-white"
+            : "bg-gray-300 text-gray-500 cursor-not-allowed"
+        }`}
       >
-        Agregar Usuario
+        Agregar
       </button>
+
       <button
         onClick={handleDeleteUser}
-        className="bg-red-500 hover:bg-red-700 text-white text-xs font-bold py-1 px-2 rounded ml-2"
+        disabled={!currentUser}
+        className={`text-sm font-semibold py-1 px-3 rounded transition-colors ${
+          currentUser
+            ? "bg-red-500 hover:bg-red-600 text-white"
+            : "bg-gray-300 text-gray-500 cursor-not-allowed"
+        }`}
       >
-        Eliminar Usuario
+        Eliminar
       </button>
+
+      {message && (
+        <span className="text-sm text-blue-700 font-medium ml-4 animate-fade-in">
+          {message}
+        </span>
+      )}
     </div>
   );
 };

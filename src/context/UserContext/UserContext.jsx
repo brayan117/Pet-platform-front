@@ -1,5 +1,10 @@
-import { createContext, useState, useEffect } from "react";
-import { getAllUsers, updateUser, createUser, deleteUser } from "../../services/usersApi";
+import { createContext, useEffect, useState } from "react";
+import {
+  createUser,
+  deleteUser,
+  getAllUsers,
+  updateUser,
+} from "../../services/usersApi";
 
 export const UserContext = createContext();
 
@@ -31,7 +36,9 @@ export const UserProvider = ({ children }) => {
   const updateCurrentUser = async (updatedUser) => {
     try {
       await updateUser(updatedUser.id, updatedUser);
-      setUsers(users.map(user => user.id === updatedUser.id ? updatedUser : user));
+      setUsers(
+        users.map((user) => (user.id === updatedUser.id ? updatedUser : user))
+      );
       setCurrentUser(updatedUser);
     } catch (error) {
       console.error("Error updating user:", error);
@@ -44,6 +51,8 @@ export const UserProvider = ({ children }) => {
       setUsers([...users, newUser]);
       setCurrentUserId(newUser.id);
       setCurrentUser(newUser);
+      setUsers((prevUsers) => [...prevUsers, newUser]);
+
       return newUser;
     } catch (error) {
       console.error("Error creating user:", error);
@@ -51,11 +60,14 @@ export const UserProvider = ({ children }) => {
     }
   };
 
- const removeUser = async (userId) => {
+  const removeUser = async (userId) => {
     try {
-      await deleteUser(userId);
-      const updatedUsers = users.filter(user => user.id !== userId);
-      setUsers([...updatedUsers]);
+      const isDeleted = await deleteUser(userId);
+      if (!isDeleted) return;
+
+      const updatedUsers = users.filter((user) => user.id !== userId);
+      setUsers(updatedUsers);
+
       if (userId === currentUserId) {
         if (updatedUsers.length > 0) {
           setCurrentUserId(updatedUsers[0].id);
@@ -71,7 +83,16 @@ export const UserProvider = ({ children }) => {
   };
 
   return (
-    <UserContext.Provider value={{ users, currentUser, setCurrentUserId, updateCurrentUser, addUser, removeUser }}>
+    <UserContext.Provider
+      value={{
+        users,
+        currentUser,
+        setCurrentUserId,
+        updateCurrentUser,
+        addUser,
+        removeUser,
+      }}
+    >
       {children}
     </UserContext.Provider>
   );
