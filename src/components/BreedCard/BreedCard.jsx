@@ -1,28 +1,35 @@
-import { useContext, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { FaHeart, FaPaw, FaRegHeart } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
 import { FavoritesContext } from '../../context/FavoritesContext/FavoritesContext';
+import { toast } from 'react-toastify';
 
 const BreedCard = ({ name, origin, description, image, id, petType }) => {
   const { isFavorite, toggleFavorite } = useContext(FavoritesContext);
-  const tipoMascotaString = petType === 'gatos' ? 'gato' : 'perro';
-  const favorito = isFavorite(id, tipoMascotaString);
 
+  const [favorito, setFavorito] = useState(false);
   const [imgError, setImgError] = useState(false);
 
-  const handleToggleFavorite = async () => {
-    const willBeFavorite = !favorito;
-    await toggleFavorite(id, tipoMascotaString);
+  useEffect(() => {
+    const checkFavorite = async () => {
+      const fav = await isFavorite(id); 
+      setFavorito(fav);
+    };
+    checkFavorite();
+  }, [id, isFavorite]);
 
-    setTimeout(() => {
-      alert(willBeFavorite ? '¡Favorito agregado correctamente!' : '¡Favorito eliminado correctamente!');
-      window.location.reload();
-    }, 250);
+  const handleToggleFavorite = async () => {
+    await toggleFavorite(id, petType);
+    const isfavorite = await isFavorite(id);
+    setFavorito(!isfavorite);
+
+    toast.success(
+      !isfavorite ? '¡Favorito agregado correctamente!' : '¡Favorito eliminado correctamente!'
+    );
   };
 
   return (
     <div className="bg-white rounded-2xl shadow-lg overflow-hidden transition-transform hover:scale-[1.02] flex flex-col h-full">
-      
       {!imgError && image ? (
         <img
           src={image}

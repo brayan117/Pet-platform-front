@@ -5,6 +5,7 @@ import "slick-carousel/slick/slick.css";
 import { getCatImageUrlsById } from '../../services/catsApi';
 import { getDogImageUrlsById } from '../../services/dogsApi';
 import './BreedDetail.css'; // si quieres añadir estilos personalizados
+import SimpleLoader from '../Loader/SimpleLoader';
 
 const BreedDetail = ({ breed, petType }) => {
   const [images, setImages] = useState([]);
@@ -55,7 +56,7 @@ const BreedDetail = ({ breed, petType }) => {
         <div>
           {loading ? (
             <div className="flex justify-center items-center h-64">
-              <span className="text-gray-500">Cargando imágenes...</span>
+              <span className="text-gray-500"><SimpleLoader /></span>
             </div>
           ) : error ? (
             <div className="h-64 flex items-center justify-center bg-gray-100 rounded">

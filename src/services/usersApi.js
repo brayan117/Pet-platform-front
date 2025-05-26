@@ -5,6 +5,10 @@ import { fetchApi, peticionesfetch } from "../utils/apiUtils";
 
 const USER_API_URL = import.meta.env.VITE_USER_API_URL;
 const API_KEY = import.meta.env.VITE_USER_API_KEY;
+export const ApiPetTypes={
+    "perros": "dogs",
+    "gatos": "cats"
+}
 
 export const getAllUsers = async () => {
     const url = `${USER_API_URL}`;
@@ -43,35 +47,22 @@ export const deleteUser = async (userId) => {
     return data;
 };
 
-export const addCatToFavorites = async (userId, breedId) => {
-    const url = `${USER_API_URL}/${userId}/favorites/cats/${breedId}`;
-    const mensajeError = "Error adding cat to favorites";
+export const addFavorite = async (userId, breedId, petType) => {
+    let url = `${USER_API_URL}/${userId}/favorites/${ApiPetTypes[petType]}/${breedId}`;
+    const mensajeError = "Error adding favorite";
     const data = await fetchApi(url, 'POST', API_KEY, mensajeError);
     return data;
-};
-
-export const addDogToFavorites = async (userId, breedId) => {
-    const url = `${USER_API_URL}/${userId}/favorites/dogs/${breedId}`;
-    const mensajeError = "Error adding dog to favorites";
-    const data = await fetchApi(url, 'POST', API_KEY, mensajeError);
-    return data;
-};
+}
 
 export const removeFavorite = async (userId, breedId, petType) => {
-    let url = `${USER_API_URL}/${userId}/favorites/${breedId}`;
-    if (petType === 'perro') {
-        url += `?pet_type=dog`;
-    }
+    let url = `${USER_API_URL}/${userId}/favorites/${breedId}?pet_type=${ApiPetTypes[petType].replace("s", "")}`;
     const mensajeError = "Error removing favorite";
     const data = await fetchApi(url, 'DELETE', API_KEY, mensajeError);
     return data;
 };
 
 export const getFavorites = async (userId, petType) => {
-    let url = `${USER_API_URL}/${userId}/favorites`;
-    if (petType) {
-        url += `?pet_type=${petType}`;
-    }
+    let url = `${USER_API_URL}/${userId}/favorites?pet_type=${ApiPetTypes[petType].replace("s", "")}`;
     const mensajeError = "Error getting favorites";
     const data = await fetchApi(url, 'GET', API_KEY, mensajeError);
     return data.data;

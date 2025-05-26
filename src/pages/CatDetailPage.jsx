@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import BreedDetail from '../components/BreedDetail/BreedDetail';
 import { getAllCatBreeds } from '../services/catsApi';
+import SimpleLoader from '../components/Loader/SimpleLoader';
 
 const CatDetailPage = () => {
   const { breedId } = useParams();
@@ -25,6 +26,7 @@ const CatDetailPage = () => {
       } catch (err) {
         setError('No se pudo cargar la raza.');
         setBreed(null);
+        console.error(err);
       } finally {
         setLoading(false);
       }
@@ -37,7 +39,7 @@ const CatDetailPage = () => {
     <div className="min-h-screen bg-gray-50 flex flex-col items-center p-6">
       {loading && (
         <div className="text-gray-500 text-lg font-medium mt-20">
-          Cargando detalles...
+          <SimpleLoader />
         </div>
       )}
       {error && (

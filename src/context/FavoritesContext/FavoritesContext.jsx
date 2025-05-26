@@ -1,75 +1,81 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import { UserContext } from "../UserContext/UserContext";
-import { addCatToFavorites, addDogToFavorites, removeFavorite } from "../../services/usersApi";
+import {
+  addFavorite as addFavoriteAPI,
+  ApiPetTypes,
+  removeFavorite as removeFavoriteAPI,
+} from "../../services/usersApi";
+import { toast } from "react-toastify";
 
+// eslint-disable-next-line react-refresh/only-export-components
 export const FavoritesContext = createContext();
 
 export const FavoritesProvider = ({ children }) => {
-  const { currentUser } = useContext(UserContext);
-  const [favorites, setFavorites] = useState([]);
-
+  const { currentUser, setCurrentUser } = useContext(UserContext);
+  const [localFavorites, setLocalFavorites] = useState([]);
+  
   useEffect(() => {
     if (currentUser) {
-      const mascotasFavoritas = currentUser.mascotasFavoritas || { cats: [], dogs: [] };
-      const combinedFavorites = [...(mascotasFavoritas?.cats || []), ...(mascotasFavoritas?.dogs || [])];
-      setFavorites(combinedFavorites);
-    } else {
-      setFavorites([]);
+      const combined=[
+      ...(currentUser.mascotasFavoritas.cats || []),
+      ...(currentUser.mascotasFavoritas.dogs || [])]
+    
+      setLocalFavorites(combined);
     }
   }, [currentUser]);
 
-  const isFavorite = (idMascota, tipoMascota) => {
-    if (!currentUser) return false;
-    const mascotasFavoritas = currentUser?.mascotasFavoritas || { cats: [], dogs: [] };
-    const favoritesArray = tipoMascota === "gato" ? mascotasFavoritas.cats : mascotasFavoritas.dogs;
-    return favoritesArray?.includes(idMascota) || false;
+  const isFavorite = (id) => {
+    return localFavorites.some((fav) => fav === id);
   };
 
-  const addFavorite = async (idMascota, tipoMascota) => {
+  const addFavorite = async (id, petType) => {
     if (!currentUser) return;
     try {
-      if (tipoMascota === "gato") {
-        await addCatToFavorites(currentUser.id, idMascota);
-      } else {
-        await addDogToFavorites(currentUser.id, idMascota);
-      }
-      const mascotasFavoritas = currentUser.mascotasFavoritas || { cats: [], dogs: [] };
-      const combinedFavorites = [...(mascotasFavoritas?.cats || []), ...(mascotasFavoritas?.dogs || [])];
-      setFavorites(combinedFavorites);
-      if (tipoMascota === "gato") {
-        setFavorites(prevFavorites => [...prevFavorites, idMascota]);
-      } else {
-        setFavorites(prevFavorites => [...prevFavorites, idMascota]);
-      }
-    } catch (error) {
-      console.error("Error adding favorite:", error);
+      await addFavoriteAPI(currentUser.id, id, petType);
+      setLocalFavorites((prev) => [...prev, id ]);
+      setCurrentUser({
+        ...currentUser,
+        mascotasFavoritas: {
+          ...currentUser.mascotasFavoritas,
+          [ApiPetTypes[petType]]: [...(currentUser.mascotasFavoritas[ApiPetTypes[petType]] || []), id],
+        },
+      })
+    } catch (err) {
+      console.error("Error adding favorite:", err);
+      toast.error("Error añadiendo favorito. Intenta nuevamente.");
     }
   };
 
-  const removeFavoritePet = async (idMascota, tipoMascota) => {
+  const removeFavoritePet = async (id, petType) => {
     if (!currentUser) return;
     try {
-      await removeFavorite(currentUser.id, idMascota, tipoMascota);
-      const mascotasFavoritas = currentUser.mascotasFavoritas || { cats: [], dogs: [] };
-      const combinedFavorites = [...(mascotasFavoritas?.cats || []), ...(mascotasFavoritas?.dogs || [])];
-      setFavorites(prevFavorites => prevFavorites.filter(fav => fav !== idMascota));
-    } catch (error) {
-      console.error("Error removing favorite:", error);
+      await removeFavoriteAPI(currentUser.id, id, petType);
+      setCurrentUser({
+        ...currentUser,
+        mascotasFavoritas: {
+          ...currentUser.mascotasFavoritas,
+          [ApiPetTypes[petType]]: currentUser.mascotasFavoritas[ApiPetTypes[petType]].filter(
+            (fav) => fav !== id
+          ),
+        },
+      })
+      setLocalFavorites((prev) => prev.filter((fav) => fav !== id));
+    } catch (err) {
+      console.error("Error removing favorite:", err);
+      toast.error("Error removiendo favorito. Intenta nuevamente.");
     }
   };
 
-  const toggleFavorite = (idMascota, tipoMascota) => {
-    if (isFavorite(idMascota, tipoMascota)) {
-      removeFavoritePet(idMascota, tipoMascota);
+  const toggleFavorite = (id, petType) => {
+    if (isFavorite(id)) {
+      removeFavoritePet(id, petType);
     } else {
-      addFavorite(idMascota, tipoMascota);
+      addFavorite(id, petType);
     }
   };
 
   return (
-    <FavoritesContext.Provider
-      value={{ favorites, isFavorite, toggleFavorite }}
-    >
+    <FavoritesContext.Provider value={{ isFavorite, toggleFavorite }}>
       {children}
     </FavoritesContext.Provider>
   );

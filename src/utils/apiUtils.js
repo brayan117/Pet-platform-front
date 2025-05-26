@@ -1,6 +1,13 @@
+import { getCachedData, setCachedData } from './indexedDbHelper';
+
 export const peticionesfetch = async (url, api_key, mensajeError) => {
   try {
-    const response = await fetch(`${url}`, {
+    const cached = await getCachedData(url);
+    if (cached) {
+      return cached;
+    }
+
+    const response = await fetch(url, {
       headers: {
         'x-api-key': api_key
       }
@@ -10,16 +17,21 @@ export const peticionesfetch = async (url, api_key, mensajeError) => {
       throw new Error(`${mensajeError}`);
     }
 
-    return await response.json();
+    const data = await response.json();
+    await setCachedData(url, data);
+    return data;
+
   } catch (error) {
     console.error('Error:', error);
-    throw error; // Re-throw the error so it can be caught by the caller
+    throw error;
   }
 };
 
+import { clearCache } from './indexedDbHelper';
+
 export const fetchApi = async (url, method, apiKey, errorMessage, body = null) => {
   const options = {
-    method: method,
+    method,
     headers: {
       'x-api-key': apiKey,
       'Content-Type': 'application/json'
@@ -34,13 +46,17 @@ export const fetchApi = async (url, method, apiKey, errorMessage, body = null) =
     const response = await fetch(url, options);
 
     if (!response.ok) {
-      const errorData = await response.json().catch(() => ({})); // Try to parse error response
+      const errorData = await response.json().catch(() => ({}));
       throw new Error(`${errorMessage}: ${response.status} - ${errorData.message || response.statusText}`);
     }
 
-    // For DELETE requests, the response might not have a body
+    //clear cache when POST, PUT or DELETE
+    if (['POST', 'PUT', 'DELETE'].includes(method.toUpperCase())) {
+      await clearCache();
+    }
+
     if (response.status === 204 || method === 'DELETE') {
-      return true; 
+      return true;
     }
 
     return await response.json();

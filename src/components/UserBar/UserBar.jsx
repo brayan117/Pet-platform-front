@@ -1,5 +1,6 @@
 import { useContext, useState } from "react";
 import { UserContext } from "../../context/UserContext/UserContext";
+import SimpleLoader from "../Loader/SimpleLoader";
 
 const UserBar = () => {
   const { users, currentUser, setCurrentUserId, addUser, removeUser } =
@@ -29,7 +30,7 @@ const UserBar = () => {
   if (!currentUser || users.length === 0) {
     return (
       <div className="bg-gray-100 border-b border-gray-300 p-2">
-        Cargando usuarios...
+        <SimpleLoader />
       </div>
     );
   }
