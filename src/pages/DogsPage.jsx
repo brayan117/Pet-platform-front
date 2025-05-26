@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import BreedCard from "../components/BreedCard/BreedCard";
-import BreedCardSkeleton from "../components/BreedCard/BreedCardSkeleton";
 import BreedFilters from "../components/Filters/BreedFilters";
 import { getAllDogBreeds } from "../services/dogsApi";
 
@@ -8,6 +7,7 @@ const DogsPage = () => {
   const [breeds, setBreeds] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+
   const [filters, setFilters] = useState({
     searchTerm: "",
     temperament: "",
@@ -109,12 +109,13 @@ const DogsPage = () => {
 
   const handleFilterChange = (newFilters) => {
     setFilters(newFilters);
+    window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   return (
-    <div className="max-w-screen-xl mx-auto px-4 py-6">
+    <div className="p-4 max-w-7xl mx-auto">
       <h1 className="text-3xl md:text-4xl font-bold text-gray-800 mb-6 text-center">
-        🐶 Razas de Perros
+        Razas de Perros
       </h1>
 
       <div className="mb-6">
@@ -125,42 +126,50 @@ const DogsPage = () => {
       </div>
 
       {loading ? (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {[...Array(6)].map((_, index) => (
-            <BreedCardSkeleton key={index} />
-          ))}
+        <div className="flex flex-col items-center justify-center h-64">
+          <div className="animate-spin rounded-full h-12 w-12 border-t-4 border-blue-600 border-opacity-50 mb-4"></div>
+          <p className="text-gray-500">Cargando razas de perros...</p>
         </div>
       ) : error ? (
-        <div
-          className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative text-center"
-          role="alert"
-        >
-          <strong className="font-bold">¡Error!</strong>
-          <span className="block sm:inline ml-2">{error}</span>
+        <div className="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-4 rounded text-center">
+          <p>{error}</p>
         </div>
       ) : (
         <>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {filteredBreeds.map((breed) => (
-              <BreedCard
-                key={breed.id}
-                name={breed.name}
-                origin={breed.origin || "Desconocido"}
-                description={breed.description || "Sin descripción disponible"}
-                image={
-                  breed.image_url ||
-                  "https://via.placeholder.com/300?text=Sin+Imagen"
-                }
-                id={breed.id}
-                petType="perros"
-              />
-            ))}
-          </div>
-
-          {filteredBreeds.length === 0 && (
-            <p className="text-center text-gray-500 mt-10 text-lg">
-              No se encontraron resultados que coincidan con tu búsqueda.
-            </p>
+          {filteredBreeds.length > 0 ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {filteredBreeds.map((breed) => (
+                <BreedCard
+                  key={breed.id}
+                  name={breed.name}
+                  origin={breed.origin || "Desconocido"}
+                  description={
+                    breed.description || "Sin descripción disponible"
+                  }
+                  image={breed.image_url}
+                  id={breed.id}
+                  petType="perros"
+                />
+              ))}
+            </div>
+          ) : (
+            <div className="text-center text-gray-500 mt-8">
+              <p className="text-lg">
+                No se encontraron resultados que coincidan con tu búsqueda.
+              </p>
+              {(filters.searchTerm ||
+                filters.temperament ||
+                filters.origin) && (
+                <button
+                  className="mt-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition"
+                  onClick={() =>
+                    setFilters({ searchTerm: "", temperament: "", origin: "" })
+                  }
+                >
+                  Limpiar filtros
+                </button>
+              )}
+            </div>
           )}
         </>
       )}

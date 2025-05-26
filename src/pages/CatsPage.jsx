@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import BreedCard from "../components/BreedCard/BreedCard";
-import BreedCardSkeleton from "../components/BreedCard/BreedCardSkeleton";
 import BreedFilters from "../components/Filters/BreedFilters";
 import { getAllCatBreeds } from "../services/catsApi";
 
@@ -69,32 +68,29 @@ const CatsPage = () => {
 
   const handleFilterChange = (newFilters) => {
     setFilters(newFilters);
-    window.scrollTo({ top: 0, behavior: "smooth" }); // UX: Lleva al usuario arriba al filtrar
+    window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   return (
     <div className="p-4 max-w-7xl mx-auto">
-      <h1 className="text-3xl font-bold mb-6 text-center text-gray-800">Razas de Gatos</h1>
+      <h1 className="text-3xl md:text-4xl font-bold text-gray-800 mb-6 text-center">
+        Razas de Gatos
+      </h1>
 
       <div className="mb-6">
         <BreedFilters onFilterChange={handleFilterChange} temperamentOptions={temperamentOptions} />
       </div>
 
-      {loading && (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {[...Array(6)].map((_, index) => (
-            <BreedCardSkeleton key={index} />
-          ))}
+      {loading ? (
+        <div className="flex flex-col items-center justify-center h-64">
+          <div className="animate-spin rounded-full h-12 w-12 border-t-4 border-blue-600 border-opacity-50 mb-4"></div>
+          <p className="text-gray-500">Cargando razas de gatos...</p>
         </div>
-      )}
-
-      {!loading && error && (
-        <div className="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-4 rounded">
+      ) : error ? (
+        <div className="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-4 rounded text-center">
           <p>{error}</p>
         </div>
-      )}
-
-      {!loading && !error && (
+      ) : (
         <>
           {filteredBreeds.length > 0 ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -112,8 +108,8 @@ const CatsPage = () => {
             </div>
           ) : (
             <div className="text-center text-gray-500 mt-8">
-              <p className="text-lg">😿 No se encontraron resultados que coincidan con tu búsqueda.</p>
-              {filters.searchTerm || filters.temperament || filters.origin ? (
+              <p className="text-lg">No se encontraron resultados que coincidan con tu búsqueda.</p>
+              {(filters.searchTerm || filters.temperament || filters.origin) && (
                 <button
                   className="mt-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition"
                   onClick={() =>
@@ -122,7 +118,7 @@ const CatsPage = () => {
                 >
                   Limpiar filtros
                 </button>
-              ) : null}
+              )}
             </div>
           )}
         </>
