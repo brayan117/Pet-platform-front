@@ -1,5 +1,6 @@
 import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
 
+import { ToastContainer } from "react-toastify";
 import logo from "./assets/logo.jpg";
 import Header from "./components/Header/Header";
 import CurrentUserInfo from "./components/UserBar/CurrentUserInfo";
@@ -10,7 +11,6 @@ import CatsPage from "./pages/CatsPage";
 import DogDetailPage from "./pages/DogDetailPage";
 import DogsPage from "./pages/DogsPage";
 import FavoritesPage from "./pages/FavoritesPage";
-import { ToastContainer } from "react-toastify";
 
 const Home = () => (
   <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
@@ -20,7 +20,7 @@ const Home = () => (
       alt="logo"
     />
     <h1 className="mt-6 text-3xl font-bold text-gray-800">
-      Bienvenido a Nuestra Plataforma: {<CurrentUserInfo />}
+      Bienvenido a devops: {<CurrentUserInfo />}
     </h1>
     <p className="mt-2 text-lg text-gray-600">
       Explora las funcionalidades que hemos preparado para ti.
