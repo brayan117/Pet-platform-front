@@ -58,6 +58,4 @@ VITE_DOG_API_KEY=tu_clave_api_perros
 - React Router
 - Axios (para peticiones HTTP)
 
-## 📄 Licencia
 
-Este proyecto está bajo la Licencia MIT.
