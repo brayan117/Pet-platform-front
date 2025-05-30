@@ -20,7 +20,7 @@ const Home = () => (
       alt="logo"
     />
     <h1 className="mt-6 text-3xl font-bold text-gray-800">
-      Bienvenido a devops: {<CurrentUserInfo />}
+      PetPlatform: {<CurrentUserInfo />}
     </h1>
     <p className="mt-2 text-lg text-gray-600">
       Explora las funcionalidades que hemos preparado para ti.
